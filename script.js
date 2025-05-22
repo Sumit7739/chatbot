@@ -14,8 +14,8 @@ const inputField = document.querySelector('.chat-input textarea');
 const sendButton = document.querySelector('.chat-input button');
 const typingIndicator = document.querySelector('.typing-indicator');
 
-// ✅ NEW API URL
-const apiURL = 'https://magicloops.dev/api/loop/0f02bdbe-b3aa-4c00-bfbf-c1b0150fc576/run';
+// ✅ API URL
+const apiURL = ''; //your api goes here
 
 sendButton.addEventListener('click', sendMessage);
 inputField.addEventListener('keyup', (event) => {
@@ -44,26 +44,14 @@ function sendMessage() {
             });
 
             if (!response.ok) {
-                // Log the response text even if it's not ok, might contain clues
                 const errorText = yield response.text();
                 console.error("API Error Response Text:", errorText);
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            // Log the raw text first to ensure it's valid JSON (optional but good for debugging)
-            // const responseText = await response.text();
-            // console.log("Raw API Response Text:", responseText);
-            // const data = JSON.parse(responseText);
-
-            // Directly parse JSON using response.json()
             const data = yield response.json();
             console.log("Parsed API Data:", data); // Log the parsed data
-
-            // --- CHANGE MADE HERE ---
-            // Use data.result instead of data.response based on the actual API output
             const botResponse = data.result || "Sorry, I didn't get a valid response.";
-            // --- END OF CHANGE ---
-
             displayMessage(botResponse, 'bot-message');
 
         } catch (error) {
@@ -87,9 +75,7 @@ function displayMessage(message, cssClass) {
     messageElement.classList.add('message', cssClass);
 
     const messageText = document.createElement('p');
-    // Use innerHTML to render potential formatting if needed, or stick to textContent for safety
-    // Be cautious with innerHTML if the API response could contain malicious scripts
-    messageText.textContent = message; // Safer option
+    messageText.textContent = message;
 
     messageElement.appendChild(messageText);
     chatArea.appendChild(messageElement);
